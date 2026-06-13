@@ -1,0 +1,31 @@
+# Unreal Engine GitIgnore template
+# Negate patterns if you want to include files under these folders
+
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# VS/VS Code/Xcode files
+.vscode/
+.vs/
+*.sln
+*.suo
+*.user
+*.userosxsar
+*.sln.docstates
+
+# Xcode
+Compiled/
+*.xcodeproj/
+*.xcworkspace/
+
+# Compiled files
+*.dll
+*.target
+*.modules
+*.pdb
+
+# Local config (might contain user specific settings)
+Instruction/
