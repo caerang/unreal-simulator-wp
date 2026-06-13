@@ -1,4 +1,4 @@
 Name,ScenarioID,TargetType,SpawnLocation
 Scenario_A,1,Drone,"(X=500.0,Y=0.0,Z=200.0)"
 Scenario_B,2,Jet,"(X=-1000.0,Y=500.0,Z=1000.0)"
-Scenario_C,3,Ship,"(X=0.0,Y=2000.0,Z=0.0)"
+Scenario_C,3,Ship,"(X=0.0,Y=2000.0,Z=150.0)"
