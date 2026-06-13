@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package fighterrl;
+
+service FighterService {
+    rpc SendState(AgentState) returns (AgentAction);
+}
+
+message AgentState {
+    string env_id = 1;         // 환경/시나리오 ID (예: Scenario_1)
+    string agent_type = 2;     // 에이전트 종류 (Fighter 등)
+    
+    // 위치 정보 (X, Y, Z)
+    float pos_x = 3;
+    float pos_y = 4;
+    float pos_z = 5;
+    
+    // 방향 정보 (Yaw, Pitch, Roll)
+    float rot_yaw = 6;
+    float rot_pitch = 7;
+    float rot_roll = 8;
+    
+    // 속도 정보 (X, Y, Z)
+    float vel_x = 9;
+    float vel_y = 10;
+    float vel_z = 11;
+    
+    // 타겟 정보
+    string target_type = 12;   // 타격 대상 종류 (Drone/Jet/Ship)
+    float target_dist = 13;    // 타겟과의 거리
+    float target_pos_x = 14;   // 타겟 위치 정보
+    float target_pos_y = 15;
+    float target_pos_z = 16;
+    
+    float reward = 17;         // 보상 값
+    bool done = 18;            // 종료 여부
+}
+
+message AgentAction {
+    float thrust = 1;          // 엔진 추진력 [0.0, 1.0]
+    float steering_yaw = 2;    // 조향 - 좌우 [-1.0, 1.0]
+    float steering_pitch = 3;  // 조향 - 위아래 [-1.0, 1.0]
+    float steering_roll = 4;   // 조향 - 롤 제어 [-1.0, 1.0]
+    bool fire = 5;             // 사격 여부
+}

@@ -64,18 +64,29 @@
 *   [x] 전체 시스템 구조 Mermaid 다이어그램 작성 ([architecture_diagram.md](file:///D:/workspace/simulator_wp/docs/architecture_diagram.md)).
 *   [x] gRPC 서버 배치 위치 기술 분석 문서 작성 및 승인 ([grpc_server_placement_analysis.md](file:///D:/workspace/simulator_wp/docs/grpc_server_placement_analysis.md)).
 
+### 9단계: gRPC 클라이언트 라이브러리 연동 및 C++ 프로젝트 전환 (2026-06-13)
+*   [x] 순수 블루프린트 프로젝트를 C++ 하이브리드 모듈 구조로 성공적 전환 (`Source` 디렉토리 생성 및 `uproject` 모듈 등록).
+*   [x] Installed Engine (UE 5.7) 및 에디터 셰어드 빌드 환경 충돌을 방지하기 위해 `BuildSettingsVersion.V6`, `Cpp20` 규격을 준수하도록 Target.cs 구성.
+*   [x] 911MB 상당의 외부 gRPC/Protobuf C++ 사전 빌드 라이브러리 바이너리 다운로드 및 `Source/ThirdParty` 디렉토리에 성공적으로 임포트.
+*   [x] 언리얼 엔진 전용 gRPC 플러그인 **TurboLink**를 프로젝트 `Plugins` 경로에 정상 임포트 완료.
+
+### 10단계: gRPC 코드 제네레이션 및 빌드 검증 (2026-06-13)
+*   [x] `FighterRL.proto` 규약 파일을 기반으로 TurboLink 컴파일 도구를 실행하여 언리얼 C++ 바인딩 코드 및 블루프린트 통신 노드 자동 제네레이션 성공.
+*   [x] 파이썬 가상환경(`.venv`) 구성 및 `grpcio`, `grpcio-tools` 패키지 설치 완료.
+*   [x] 파이썬 gRPC 컴파일 및 상태 관측(State) 후 더미 제어 수치(Action)를 응답하는 파이썬 gRPC 서버 [python_agent/server.py](file:///D:/workspace/simulator_wp/python_agent/server.py) 개발 완료.
+*   [x] UnrealBuildTool(UBT)을 실행하여 게임 모듈 및 TurboLinkGrpc 컴파일 완수 (`UnrealEditor-simulator_wp.dll` 등 라이브러리 정상 빌드 성공).
+
 ---
 
 ## 향후 작업 로드맵 (Roadmap)
 
-### [ ] 다음 단계: gRPC 파이프라인 구축 (Python=Server / UE5=Client)
-*   [ ] `FighterRL.proto` 파일 정식 작성 및 파이썬(pb2.py) / 언리얼(C++) 환경으로 컴파일.
-*   [ ] **Python gRPC Server** 구축 (State 수신 → 배치 추론 → Action 응답).
-*   [ ] 언리얼 엔진에 gRPC **Client** 통신 모듈 구현 (플러그인 또는 C++ 모듈).
-*   [ ] 행위 트리(BT)에서 gRPC Client 노드를 호출하여 State 전송 / Action 수신 핵심 루프 완성.
+### [ ] 다음 단계: 블루프린트 및 행위 트리(BT) gRPC 통신 바인딩
+*   [ ] 언리얼 에디터를 열고 `AIC_Fighter` 또는 행위 트리(`BT_Fighter`)의 제어 루프에서 TurboLink 자동 생성 gRPC Client 노드를 추가.
+*   [ ] 매 Tick마다 전투기의 상태(State) 데이터 핀을 연결하여 파이썬 서버에 호출하도록 구성.
+*   [ ] 반환된 행동(Action) 값에 따라 추진력(Thrust) 및 조향(Steering Offset)을 Pawn에 반영하는 로직 구현.
 
 ### [ ] 단일 에이전트 E2E 통합 테스트
-*   [ ] 단일 전투기 시나리오에서 UE <-> Python 간 State/Action 실시간 송수신 검증.
+*   [ ] 파이썬 gRPC 서버를 실행하고, 언리얼 플레이(PIE) 실행 시 State/Action 데이터가 지연(Latency) 없이 매끄럽게 통신하는지 로그 및 움직임 검증.
 
 ### [ ] 멀티 시나리오 파이프라인 확장
 *   [ ] 32개/64개 이상의 시나리오가 독립된 gRPC 채널을 통해 비동기 송수신할 수 있도록 통신 모듈 확장.

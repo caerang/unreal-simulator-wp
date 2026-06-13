@@ -29,3 +29,16 @@ Compiled/
 
 # Local config (might contain user specific settings)
 Instruction/
+
+# Python virtual environment and cache
+.venv/
+__pycache__/
+*.pyc
+
+# Plugins intermediate and build products
+Plugins/*/Binaries/
+Plugins/*/Intermediate/
+Plugins/*/Saved/
+
+# Ignore large precompiled thirdparty libraries within plugins
+Plugins/*/Source/ThirdParty/
