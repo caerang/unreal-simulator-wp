@@ -31,6 +31,13 @@
 * **행위 트리(BT) 분기 로직:** 블랙보드에 기록된 `MissionTarget` 변수 값("Drone", "Jet", "Ship")에 따라 행동을 달리하는 `Selector` 및 3개의 `Sequence` 분기점 구축 완료.
 * **트리 생존용 Fallback:** 조건 불일치 시 트리가 즉시 강제 종료(Instant Death)되는 것을 방지하기 위해 `Wait 500s` 안전망 노드 적용, 디버그 목록 실시간 모니터링 성공.
 
+### 2.5. C++ 모듈 마이그레이션 및 gRPC 연동 완료 (2026-06-13)
+* **C++ 프로젝트 하이브리드화:** 순수 블루프린트 프로젝트에서 C++ 모듈 컴파일이 가능하도록 프로젝트 구조(`Source`, `.Target.cs`, `.Build.cs`)를 설계 및 UBT 연동 완료.
+* **Unreal Engine 5.7 빌드 호환성 대응:** Installed Engine의 공유 빌드 환경 규격과의 속성 충돌을 해결하기 위해 `DefaultBuildSettings = BuildSettingsVersion.V6` 및 `CppStandard = CppStandardVersion.Cpp20`을 타겟 설정에 적용하여 컴파일을 완수함.
+* **gRPC 라이브러리 및 플러그인 빌드:** `Source/ThirdParty`에 사전 빌드된 gRPC C++ 라이브러리 바이너리를 적재하고, **TurboLink** 플러그인을 프로젝트 내 빌드 트리에 포함시켜 `UnrealEditor-TurboLinkGrpc.dll` 빌드 성공.
+* **gRPC 코드 제네레이션:** `FighterRL.proto` 스키마로부터 언리얼 C++ 클래스 및 블루프린트 비동기 호출 노드 코드를 자동 생성하여 플러그인 소스 트리에 병합 완료.
+* **Python gRPC 서버 완비:** 파이썬 가상환경 구축 및 `grpcio` 설치를 완료하고, 언리얼의 관측 데이터(`State`)를 받아 더미 기동 제어값(`Action`)을 응답하는 [python_agent/server.py](file:///D:/workspace/simulator_wp/python_agent/server.py)를 구축함.
+
 ---
 
 ## 3. 설계 검토 및 결정 사항 (Architecture Decisions)
@@ -54,7 +61,6 @@
 
 ## 4. 향후 진행 예정 사항 (Next Steps)
 
-1. **gRPC 플러그인 설치 및 세팅:** 언리얼 엔진에 gRPC 통신용 플러그인(TurboLink 등) 임포트 및 빌드.
-2. **.proto 파일 컴파일:** 설계한 `FighterRL.proto` 파일을 파이썬(pb2.py) 및 언리얼(C++/Blueprint Node) 환경으로 자동 변환.
-3. **파이썬 RL 더미 서버 구동:** 랜덤한 행동 수치(Action)를 뱉어내는 파이썬 기초 서버 구축.
-4. **블루프린트 통신 노드 연결:** 행위 트리(BT)에서 gRPC 노드를 호출하여 파이썬에 State를 보내고, 되돌아온 Action 값을 바탕으로 큐브를 움직이는(Add Actor Local Offset) 핵심 루프 완성.
+1. **블루프린트 통신 노드 연결:** 언리얼 에디터를 실행하여 행위 트리(`BT_Fighter`) 또는 AI 컨트롤러(`AIC_Fighter`)에 TurboLink가 생성한 gRPC 노드를 배치하고, 변수와 핀들을 연결하는 통신 루프 조립.
+2. **단일 에이전트 E2E 통합 테스트:** 파이썬 gRPC 서버를 실행하고, 언리얼 PIE 모드에서 State/Action 데이터가 지연 없이 정상적으로 비동기 통신 및 큐브 제어가 일어나는지 검증.
+3. **멀티 시나리오 확장 및 LWC 오프셋 검증:** 32개/64개 이상의 다중 에이전트 시나리오 환경으로 통신 모듈을 확장하고, 물리 거점 격리 아키텍처의 정상 동작 테스트.
